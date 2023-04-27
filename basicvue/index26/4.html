@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+<div id="shopping-list">
+
+    <div class="header">
+        <h1> {{header || 'Welcome'}}</h1>
+        <button v-if="editting" @click="doEdit(false)"> Canccek</button>
+        <button v-else @click="doEdit(true)">Add item</button>
+    </div>
+    <div v-if="editting" class="add-item-form">
+        <input
+                @keyup.enter="saveItem"
+                v-model="newItem" type="text" placeholder="Add an item">
+        <p class="counter">{{characterCount}}</p>
+
+        <label>
+            <input type="checkbox" v-model="check">high priority
+        </label>
+        <button :disabled="newItem.length<5"
+                @click=saveItem class="btn btn-primary">Save item</button>
+    </div>
+<br>
+    <label>
+        Priority
+        <select v-model="newItemPriority">
+            <option value="low">Low</option>
+            <option value="high">High</option>
+        </select>
+    </label>
+
+    <br>
+    {{newItem}} <br>{{newItemPriority}} <br>{{check}}
+    <br>
+    <div>
+        <label> <input type="checkbox" value="dabong">Đá bóng</label>
+        <label> <input type="checkbox" value="book">sách</label>
+        <label> <input type="checkbox" value="game">Game</label>
+        <label> <input type="checkbox" value="music">Nhạc</label>
+    </div>
+    <p v-if="items.length===0"> Nice job </p>
+    <ul>
+        <li v-for="item in items"
+            @click="toggle(item)"
+            :key="id"
+        :class="{strikeout:item.purchased,priority:item.highPriority}"
+            class="static-class">
+            {{item.label}}
+        </li>
+
+    </ul>
+
+</div>
+<script>
+    const shoppingList = Vue.createApp({
+        data() {
+            return {
+                header: "Shopping list app",//heder là tên 1 biên treong dta
+                newItem: '',
+                editting: false,
+                newItemPriority: 'low',
+                check: false,
+                items: [
+                    {id: 1, label: "10 arty hát",purchased:true,highPriority:false},
+                    {id: 2, label: "2 arty hát",purchased:true,highPriority:false},
+                    {id: 3, label: "6 arty hát",purchased:false,highPriority:true},
+                ]
+            }
+        },
+        computed:{
+            // computed là một thuộc tính được sử dụng để định nghĩa các tính toán phức tạp dựa trên các giá trị của các thuộc tính khác trong cùng Vue instance.
+            characterCount(){
+                return this.newItem.length
+            },
+            reversedItems(){
+                return [...this.items].reverse()
+            }
+        },
+        methods: {
+            saveItem() {
+                this.items.push({id: this.items.length + 1,
+                    label: this.newItem,
+                highPriority:this.newItemPriority
+                })
+                this.newItem = ""
+                this.newItemPriority=""
+            },
+            doEdit(editting) {
+                this.editting = editting
+                this.newItem = ""
+                this.newItemPriority=""
+            },
+            toggle(item){
+                item.purchased=!item.purchased
+            }
+        }
+    })
+        .mount('#shopping-list')
+    // phương thức .mount() được sử dụng để gắn ứng dụng với một phần tử trong HTML
+</script>
+</body>
+</html>
