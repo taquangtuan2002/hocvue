@@ -1,28 +1,30 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import {ref} from "vue";
-const text =ref()
-
-const greet={}
+import {useToast} from "primevue/usetoast";
+const text =ref();
+const toast=useToast()
+const greet=() => {
+toast.add({severity:"success",summary:"PrimeTime",detail:text.value})
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <Toast></Toast>
+  <div class="container">
+      <span class="p-float-label">
+          <InputText id="txt" type="text" v-model="text"/>
+          <label for="txt"> Text</label>
+      </span>
+      <Button label="Greet" @click="greet" icon="pi pi-user"></Button>
+  </div>
 </template>
 
 <style scoped>
-
+.container{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    min-height: 100vh;
+}
 </style>
